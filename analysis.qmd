@@ -74,4 +74,69 @@ movies |>
     )
 ```
 
+```{r}
+#| label: movie-gap
+
+gap_by_genre <- movies |>
+  mutate(gap = tomatoMeter - audienceScore) |>
+  separate_longer_delim(genre, delim = ", ") |>
+  group_by(genre) |>
+  summarise(
+    mean_gap = mean(gap, na.rm = TRUE),
+    movie_count = n(),
+    .groups = "drop"
+  ) |>
+  filter(movie_count >= 50) |>
+  arrange(mean_gap)
+
+gap_by_genre
+```
+
+```{r}
+#| label: gap-summary
+
+movies |>
+  mutate(gap = tomatoMeter - audienceScore) |>
+  summarise(
+    mean_gap = mean(gap, na.rm = TRUE),
+    median_gap = median(gap, na.rm = TRUE),
+    sd_gap = sd(gap, na.rm = TRUE)
+  )
+```
+
+```{r}
+#| label: gap-by-genre
+
+movies_summary <- movies |>
+  mutate(gap = tomatoMeter - audienceScore) |>
+  separate_longer_delim(genre, delim = ", ") |>
+  group_by(genre) |>
+  summarise(
+    mean_gap = mean(gap, na.rm = TRUE),
+    movie_count = n(),
+    .groups = "drop"
+  ) |>
+  filter(movie_count >= 100) |>
+  arrange(mean_gap)
+
+movies_summary
+```
+
+```{r}
+#| label: genre-gap-chart
+
+movies_summary |>
+  mutate(genre = fct_reorder(genre, mean_gap)) |>
+  ggplot(aes(x = genre, y = mean_gap)) +
+  geom_col() +
+  coord_flip() +
+  geom_hline(yintercept = 0, color = "red", linewidth = 1) +
+  labs(
+    title = "Average Audience-Critic Gap by Genre",
+    subtitle = "Positive values favor the audience; negative values favor the critic",
+    x = "Genre",
+    y = "Average Gap"
+  )
+```
+
 This is a simple Quarto document for the movie analysis tutorial.
