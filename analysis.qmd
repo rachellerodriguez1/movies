@@ -13,4 +13,65 @@ library(tidyverse)
 movies <- read_csv("data/movies.csv")
 ```
 
+```{r}
+#| label: print-movies
+
+glimpse(movies)
+names(movies)
+```
+
+```{r}
+#| label: missing-values
+
+movies |>
+  summarise(across(everything(), ~ sum(is.na(.x))))
+```
+
+```{r}
+#| label: top-box-office
+
+movies |>
+  filter(!is.na(boxOffice)) |>
+  select(title, boxOffice) |>
+  slice_head(n = 10)
+```
+
+```{r}
+#| label: genre-split
+#| cache: true
+
+movies_clean <- movies |>
+  separate_longer_delim(genre, delim = ", ")
+```
+
+```{r}
+#| label: genre-counts
+
+movies_clean |>
+  count(genre, sort = TRUE)
+```
+
+```{r}
+#| label: mean-scores
+
+movies |>
+  summarise(
+    mean_audience_score = mean(audienceScore, na.rm = TRUE),
+    mean_tomato_meter = mean(tomatoMeter, na.rm = TRUE)
+  )
+```
+
+```{r}
+#| label: tomato-meter-histogram
+
+movies |>
+  ggplot(aes(x = tomatoMeter)) +
+    geom_histogram(binwidth = 5, fill = "tomato", color = "black") +
+    labs(
+      x = "Tomatometer Score",
+      y = "Count",
+      title = "Distribution of Tomatometer Scores"
+    )
+```
+
 This is a simple Quarto document for the movie analysis tutorial.
