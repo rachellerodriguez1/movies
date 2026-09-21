@@ -1,6 +1,16 @@
 ---
 title: "Movie Analysis"
 author: "GitHub Copilot"
+execute:
+  echo: false
 ---
+
+```{r}
+#| label: setup
+#| message: false
+
+library(tidyverse)
+movies <- read_csv("data/movies.csv")
+```
 
 This is a simple Quarto document for the movie analysis tutorial.
