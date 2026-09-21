@@ -1,0 +1,6 @@
+---
+title: "Movie Analysis"
+author: "GitHub Copilot"
+---
+
+This is a simple Quarto document for the movie analysis tutorial.
